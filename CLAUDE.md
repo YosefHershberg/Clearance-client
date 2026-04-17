@@ -13,3 +13,11 @@
 - API calls go in src/api/
 - Use named exports for components
 - No default exports except for pages
+
+## Knowledge Vault
+Client-side docs live in the repo-wide Obsidian vault at `../docs/vault/`.
+
+- Client MOC: `../docs/vault/00-Index/Client MOC.md`
+- Component pages: `../docs/vault/20-Client/components/`
+- API client: `../docs/vault/20-Client/api-client/Client API Client.md`
+- Update the matching vault page when you add/change components, routes, or the API client
