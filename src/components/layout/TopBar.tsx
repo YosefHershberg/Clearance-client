@@ -46,9 +46,9 @@ export function TopBar() {
             </Link>
           )}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">{user.name}</Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={<Button variant="outline" size="sm">{user.name}</Button>}
+            />
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
