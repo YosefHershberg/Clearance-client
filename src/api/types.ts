@@ -35,3 +35,21 @@ export type ListProjectsResponse = {
   projects: Project[];
   nextCursor?: string;
 };
+
+export type ExtractionStatus = 'PENDING' | 'EXTRACTING' | 'COMPLETED' | 'FAILED';
+
+export type DxfFile = {
+  id: string;
+  projectId: string;
+  originalName: string;
+  sha256: string;
+  sizeBytes: number;
+  extractionStatus: ExtractionStatus;
+  extractionError: string | null;
+  structuralHash: string | null;
+  createdAt: string;
+};
+
+export type ListDxfFilesResponse = {
+  dxfFiles: DxfFile[];
+};
