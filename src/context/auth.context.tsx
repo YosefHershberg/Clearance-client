@@ -1,14 +1,6 @@
-import { createContext, useMemo, type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useMe } from '@/hooks/useMe';
-import type { User } from '@/api/types';
-
-export type AuthContextValue = {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-};
-
-export const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext, type AuthContextValue } from './auth-context';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { data, isLoading } = useMe();

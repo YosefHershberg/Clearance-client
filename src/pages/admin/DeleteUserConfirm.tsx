@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { User } from '@/api/types';
@@ -24,10 +24,6 @@ export function DeleteUserConfirm({ user, onOpenChange }: Props) {
   const qc = useQueryClient();
   const [typed, setTyped] = useState('');
   const { execute, isLoading } = useHttpClient({ fn: deleteUser });
-
-  useEffect(() => {
-    if (!user) setTyped('');
-  }, [user]);
 
   const canDelete = !!user && typed === user.email;
 
