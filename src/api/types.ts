@@ -38,6 +38,29 @@ export type ListProjectsResponse = {
 
 export type ExtractionStatus = 'PENDING' | 'EXTRACTING' | 'COMPLETED' | 'FAILED';
 
+export type SheetClassification =
+  | 'INDEX_PAGE'
+  | 'FLOOR_PLAN'
+  | 'CROSS_SECTION'
+  | 'ELEVATION'
+  | 'PARKING_SECTION'
+  | 'SURVEY'
+  | 'SITE_PLAN'
+  | 'ROOF_PLAN'
+  | 'AREA_CALCULATION'
+  | 'UNCLASSIFIED';
+
+export type SheetRender = {
+  id: string;
+  sheetIndex: number;
+  displayName: string;
+  classification: SheetClassification;
+  geometryBlock: string | null;
+  annotationBlock: string | null;
+  svgWarning: string | null;
+  filename: string;
+};
+
 export type DxfFile = {
   id: string;
   projectId: string;
@@ -48,6 +71,7 @@ export type DxfFile = {
   extractionError: string | null;
   structuralHash: string | null;
   createdAt: string;
+  sheetRenders?: SheetRender[];
 };
 
 export type ListDxfFilesResponse = {
