@@ -3,13 +3,16 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { useProject } from '@/hooks/useProject';
 import { useProjectDxfFiles } from '@/hooks/useProjectDxfFiles';
+import { useDxfFile } from '@/hooks/useDxfFile';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { DeleteProjectConfirm } from './projects/DeleteProjectConfirm';
 import { DxfDropzone } from './projects/DxfDropzone';
 import { ExtractionStatusPill } from '@/components/ExtractionStatusPill';
-import type { Project } from '@/api/types';
+import { DxfPreviewGrid } from '@/components/DxfPreviewGrid';
+import { DxfPreviewLightbox } from '@/components/DxfPreviewLightbox';
+import type { Project, SheetRender } from '@/api/types';
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -30,7 +33,15 @@ export default function ProjectDetailPage() {
   const { user } = useAuth();
   const { data, isLoading, isError, error } = useProject(id);
   const dxfsQuery = useProjectDxfFiles(id);
+  const dxfFilesList = dxfsQuery.data?.dxfFiles ?? [];
+  const currentDxfForDetail = dxfFilesList[0];
+  const dxfDetail = useDxfFile(
+    currentDxfForDetail?.extractionStatus === 'COMPLETED'
+      ? currentDxfForDetail.id
+      : undefined,
+  );
   const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
+  const [lightboxSheet, setLightboxSheet] = useState<SheetRender | null>(null);
 
   useEffect(() => {
     if (isError) {
@@ -47,7 +58,9 @@ export default function ProjectDetailPage() {
 
   const project = data;
   const isOwnerOrAdmin = user?.id === project.ownerId || user?.role === 'ADMIN';
-  const dxfFiles = dxfsQuery.data?.dxfFiles ?? [];
+  const dxfFiles = dxfFilesList;
+  const currentDxf = currentDxfForDetail;
+  const sheetRenders = dxfDetail.data?.sheetRenders ?? [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -109,6 +122,32 @@ export default function ProjectDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      {currentDxf && sheetRenders.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle
+              className="text-sm font-medium text-muted-foreground"
+              dir="rtl"
+            >
+              גיליונות
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DxfPreviewGrid
+              dxfFileId={currentDxf.id}
+              sheets={sheetRenders}
+              onSelect={setLightboxSheet}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      <DxfPreviewLightbox
+        dxfFileId={currentDxf?.id ?? ''}
+        sheet={lightboxSheet}
+        onClose={() => setLightboxSheet(null)}
+      />
 
       <DeleteProjectConfirm project={deleteTarget} onOpenChange={() => setDeleteTarget(null)} />
     </div>
